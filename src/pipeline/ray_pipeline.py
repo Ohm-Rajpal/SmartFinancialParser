@@ -89,6 +89,12 @@ class CentralPipeline:
         if missing_columns:
             raise ValueError(f"Missing required columns: {missing_columns}")
         
+        # Preserve original row index for ground truth matching
+        df['original_row_index'] = df.index
+        
+        # Preserve original row index for ground truth matching
+        df['original_row_index'] = df.index
+        
         metadata['total_rows'] = len(df)
         logger.info(f"Loaded {len(df)} rows from CSV")
         
@@ -158,16 +164,17 @@ class CentralPipeline:
         df['category'] = results_series.map(lambda r: r.category)
         df['confidence'] = results_series.map(lambda r: r.confidence)
         
-        # create clean output DataFrame
+        # create clean output DataFrame (preserve original_row_index for ground truth matching)
         clean_df = df[[
             'normalized_date',
             'normalized_merchant', 
             'normalized_amount',
-            'category'
+            'category',
+            'original_row_index'
         ]].copy()
 
         # Rename columns for clarity
-        clean_df.columns = ['date', 'merchant', 'amount', 'category']
+        clean_df.columns = ['date', 'merchant', 'amount', 'category', 'original_row_index']
         
         # important metrics for the final analysis!
         top_category = clean_df.groupby('category')['amount'].sum().idxmax()

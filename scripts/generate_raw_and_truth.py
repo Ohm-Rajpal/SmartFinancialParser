@@ -45,6 +45,10 @@ class MessyDataGenerator:
         "=1+1",                # CSV injection
         "=cmd|'/c calc'!A1",   # CSV formula injection
         "@SUM(A1:A10)",        # CSV function injection
+        "../../etc/passwd",    # Path traversal attack
+        "../root/.ssh/id_rsa", # Path traversal attack
+        "/etc/passwd",         # Path traversal attack
+        "~/secret.txt",        # Path traversal attack
         "Normal Store & Co.",  # Ampersand
         "Store-With-Dashes",
         "Store's Apostrophe",
@@ -187,18 +191,31 @@ class MessyDataGenerator:
         Generate transaction with explicit category mapping.
         
         Ground truth uses hardcoded categories to benchmark the AI.
+        Includes edge cases (10% chance) for security testing.
         """
-        # Pick random merchant
-        merchant_data = random.choice(Config.MERCHANTS_WITH_CATEGORIES)
-        
-        # Pick random variation
-        messy_name = random.choice(merchant_data["variations"])
-        
-        # Ground truth from explicit category mapping
-        ground_truth = {
-            "clean_merchant": merchant_data["clean_name"],
-            "true_category": merchant_data["category"]
-        }
+        # 90% real merchants, 10% edge cases (for security testing)
+        if random.random() < 0.9:
+            # Pick random merchant from known merchants
+            merchant_data = random.choice(Config.MERCHANTS_WITH_CATEGORIES)
+            
+            # Pick random variation
+            messy_name = random.choice(merchant_data["variations"])
+            
+            # Ground truth from explicit category mapping
+            ground_truth = {
+                "clean_merchant": merchant_data["clean_name"],
+                "true_category": merchant_data["category"]
+            }
+        else:
+            # Edge case merchant
+            messy_name = random.choice(self.EDGE_CASE_MERCHANTS)
+            
+            # For edge cases, use the merchant name itself as "clean"
+            # Category is "Other" since edge cases don't have a defined category
+            ground_truth = {
+                "clean_merchant": messy_name,  # Edge case: use as-is
+                "true_category": "Other"  # Edge cases default to "Other"
+            }
         
         transaction = {
             "date": self.generate_random_date(),
@@ -279,9 +296,14 @@ class MessyDataGenerator:
         print(f"   Empty merchants: {empty_merchants}")
         
         # Count edge cases
-        edge_cases = sum(1 for txn in transactions 
-                        if any(txn["merchant"].startswith(ec) for ec in ["=", "@", "+", "-"]))
-        print(f"   CSV injection attempts: {edge_cases}")
+        csv_injection_cases = sum(1 for txn in transactions 
+                                  if any(txn["merchant"].startswith(ec) for ec in ["=", "@", "+", "-"]))
+        print(f"   CSV injection attempts: {csv_injection_cases}")
+        
+        # Count path traversal attempts
+        path_traversal_cases = sum(1 for txn in transactions 
+                                   if any(pattern in txn["merchant"] for pattern in ["../", "/etc/", "/root/", "~/"]))
+        print(f"   Path traversal attempts: {path_traversal_cases}")
         
         # Count negative amounts
         negative_amounts = sum(1 for txn in transactions if "-" in txn["amount"])
@@ -301,6 +323,7 @@ class MessyDataGenerator:
         print("Merchant normalization (variations, typos)")
         print("Missing data handling (empty merchants)")
         print("Security validation (CSV injection attempts)")
+        print("Security validation (path traversal attempts)")
         print("Unicode handling (special characters)")
         print("Refund/negative amount handling")
 

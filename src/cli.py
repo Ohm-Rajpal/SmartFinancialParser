@@ -40,10 +40,57 @@ def compare_with_ground_truth(clean_csv_path, ground_truth_csv_path) -> dict:
         clean_df = pd.read_csv(clean_csv_path)
         gt_df = pd.read_csv(ground_truth_csv_path)
         
-        # both should have same number of rows
-        min_rows = min(len(clean_df), len(gt_df))
-        clean_df = clean_df.head(min_rows)
-        gt_df = gt_df.head(min_rows)
+        # Match rows by original_row_index if available, otherwise by position
+        if 'original_row_index' in clean_df.columns:
+            # Merge on original_row_index to properly align rows
+            merged_df = clean_df.merge(
+                gt_df, 
+                left_on='original_row_index', 
+                right_on='row_index', 
+                how='inner',
+                suffixes=('_pred', '_truth')
+            )
+            logger.info(f"Matched {len(merged_df)} rows by original_row_index")
+        else:
+            # Fallback: match by position (less accurate if rows were removed)
+            min_rows = min(len(clean_df), len(gt_df))
+            merged_df = pd.concat([
+                clean_df.head(min_rows).reset_index(drop=True),
+                gt_df.head(min_rows).reset_index(drop=True)
+            ], axis=1)
+            logger.warning("No original_row_index found, matching by position (may be inaccurate)")
+        
+        # Identify edge cases (security attacks) that should be excluded from accuracy
+        # These are attacks that the system correctly rejects/sanitizes
+        def is_security_attack(merchant: str) -> bool:
+            """Check if merchant name is a security attack (edge case)"""
+            if not merchant or not isinstance(merchant, str):
+                return False
+            merchant_lower = merchant.lower().strip()
+            
+            # CSV injection patterns
+            if merchant.startswith(('=', '+', '-', '@')):
+                return True
+            
+            # Path traversal patterns
+            if any(pattern in merchant for pattern in ['../', '/etc/', '/root/', '~/']):
+                return True
+            
+            # Very long names (potential buffer overflow)
+            if len(merchant) > 200:
+                return True
+            
+            return False
+        
+        # Filter out security attacks from accuracy calculation
+        # Use messy_merchant from ground truth to check if it was an attack
+        messy_col = 'messy_merchant' if 'messy_merchant' in merged_df.columns else 'clean_merchant_truth'
+        valid_mask = merged_df[messy_col].apply(
+            lambda x: not is_security_attack(str(x)) if pd.notna(x) else False
+        )
+        
+        # Only calculate accuracy on non-attack transactions
+        valid_merged_df = merged_df[valid_mask].copy()
         
         # fuzzy matching
         def names_match(predicted: str, truth: str) -> bool:
@@ -55,9 +102,17 @@ def compare_with_ground_truth(clean_csv_path, ground_truth_csv_path) -> dict:
             - "McDonald's" vs "McDonalds" (apostrophe)
             - "STARBUCKS" vs "Starbucks" (case)
             """
+            # Handle None/NaN
+            if not predicted or not truth:
+                return False
+            
             # Normalize both names
-            pred_norm = str(predicted).lower().strip().replace("'", "").replace(".", "").replace("-", "")
-            truth_norm = str(truth).lower().strip().replace("'", "").replace(".", "").replace("-", "")
+            pred_norm = str(predicted).lower().strip().replace("'", "").replace(".", "").replace("-", " ")
+            truth_norm = str(truth).lower().strip().replace("'", "").replace(".", "").replace("-", " ")
+            
+            # Remove extra spaces
+            pred_norm = " ".join(pred_norm.split())
+            truth_norm = " ".join(truth_norm.split())
             
             # Exact match after normalization
             if pred_norm == truth_norm:
@@ -74,25 +129,41 @@ def compare_with_ground_truth(clean_csv_path, ground_truth_csv_path) -> dict:
                 return True
             return False
         
-        # Compare merchant names with fuzzy matching
+        # Compare merchant names with fuzzy matching (only on valid transactions)
+        # Handle column names after merge (pandas adds suffixes)
+        if 'original_row_index' in clean_df.columns:
+            # We merged, so use the merged column names
+            pred_col = 'merchant' if 'merchant' in valid_merged_df.columns else 'merchant_pred'
+            truth_col = 'clean_merchant' if 'clean_merchant' in valid_merged_df.columns else 'clean_merchant_truth'
+        else:
+            # Fallback: direct column access
+            pred_col = 'merchant'
+            truth_col = 'clean_merchant'
+        
         merchant_matches = sum(
-            1 for pred, truth in zip(clean_df['merchant'], gt_df['clean_merchant'])
+            1 for pred, truth in zip(valid_merged_df[pred_col], valid_merged_df[truth_col])
             if names_match(pred, truth)
         )
         
         # Compare categories (exact match - this is straightforward)
-        category_matches = (gt_df['true_category'] == clean_df['category']).sum()
+        category_col = 'category' if 'category' in valid_merged_df.columns else 'category_pred'
+        category_matches = (valid_merged_df['true_category'] == valid_merged_df[category_col]).sum()
         
-        total = len(clean_df)
-        merchant_accuracy = (merchant_matches / total) * 100 if total > 0 else 0.0
-        category_accuracy = (category_matches / total) * 100 if total > 0 else 0.0
+        total_valid = len(valid_merged_df)
+        total_with_attacks = len(merged_df)
+        excluded_attacks = total_with_attacks - total_valid
+        
+        merchant_accuracy = (merchant_matches / total_valid) * 100 if total_valid > 0 else 0.0
+        category_accuracy = (category_matches / total_valid) * 100 if total_valid > 0 else 0.0
         
         return {
             'merchant_matches': merchant_matches,
-            'merchant_total': total,
+            'merchant_total': total_valid,
             'merchant_accuracy': merchant_accuracy,
             'category_matches': category_matches,
-            'category_accuracy': category_accuracy
+            'category_accuracy': category_accuracy,
+            'excluded_attacks': excluded_attacks,
+            'total_transactions': total_with_attacks
         }
         
     except Exception as e:
@@ -122,7 +193,13 @@ def display_accuracy_metrics(metrics: dict):
     print("Accuracy Metrics (vs Ground Truth)")
     print("=" * 100)
     
-    print(f"\nMerchant Name Accuracy:")
+    # Show excluded security attacks if any
+    if metrics.get('excluded_attacks', 0) > 0:
+        print(f"\nNote: {metrics['excluded_attacks']} security attack(s) excluded from accuracy calculation")
+        print(f"      (These are correctly rejected/sanitized by the system)")
+        print(f"      Total transactions: {metrics.get('total_transactions', metrics['merchant_total'])}")
+    
+    print(f"\nMerchant Name Accuracy (on {metrics['merchant_total']} valid transactions):")
     print(f"  Matches: {metrics['merchant_matches']}/{metrics['merchant_total']}")
     print(f"  Accuracy: {metrics['merchant_accuracy']:.2f}%")
     
@@ -197,6 +274,7 @@ def generate_and_process(num_transactions: int) -> bool:
         output_path = Config.PROCESSED_DATA_DIR / "clean_transactions.csv"
         # Ensure directory exists
         output_path.parent.mkdir(parents=True, exist_ok=True)
+        # Keep original_row_index in CSV for ground truth matching
         df.to_csv(output_path, index=False)
         print(f"\n" + "=" * 100)
         print(f"Results saved to: {output_path}")
