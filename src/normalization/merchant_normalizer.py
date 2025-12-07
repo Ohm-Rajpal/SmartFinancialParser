@@ -40,13 +40,15 @@ class MerchantNormalizer:
         self.min_batch_size = 5   # Minimum merchants per batch
         self.max_batch_size = 200  # Maximum merchants per batch
 
-        # initialize ray
+        # Ray should already be initialized by CLI, but check just in case
         if not ray.is_initialized():
-            ray.init(num_cpus=Config.RAY_NUM_CPUS, 
-                    object_store_memory=Config.RAY_OBJECT_STORE_MEMORY, 
-                    logging_level=logging.INFO)    
-        logger.info(f"Ray initialized with {Config.RAY_NUM_CPUS} CPUs")
-    
+            logger.warning("Ray not initialized! Initializing now (should have been done by CLI)")
+            ray.init(
+                num_cpus=Config.RAY_NUM_CPUS, 
+                object_store_memory=Config.RAY_OBJECT_STORE_MEMORY, 
+                logging_level=logging.INFO
+            )
+
     # core logic
     def normalize_merchants(
         self,

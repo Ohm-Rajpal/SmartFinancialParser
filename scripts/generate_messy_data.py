@@ -188,11 +188,13 @@ class MessyDataGenerator:
         "A" * 250,      # Very long name (exceeds max length)
     ]
     
-    def __init__(self):
+    def __init__(self, num_transactions):
         """
         Initialize generator
+        Args:
+            num_transactions: Number of transactions to generate
         """
-        self.num_transactions = Config.NUM_TEST_TRANSACTIONS 
+        self.num_transactions = num_transactions if num_transactions else Config.NUM_TEST_TRANSACTIONS
         self.output_path = Config.RAW_DATA_DIR / "messy_transactions.csv"
         
     def generate_random_date(self) -> str:

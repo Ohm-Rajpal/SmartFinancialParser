@@ -163,12 +163,11 @@ class CentralPipeline:
             'normalized_date',
             'normalized_merchant', 
             'normalized_amount',
-            'category',
-            'confidence'
+            'category'
         ]].copy()
 
         # Rename columns for clarity
-        clean_df.columns = ['date', 'merchant', 'amount', 'category', 'confidence']
+        clean_df.columns = ['date', 'merchant', 'amount', 'category']
         
         # important metrics for the final analysis!
         top_category = clean_df.groupby('category')['amount'].sum().idxmax()
@@ -182,16 +181,22 @@ class CentralPipeline:
         
         return clean_df, metadata
     
-    def shutdown(self):
-        """Shutdown Ray"""
-        self.merchant_normalizer.shutdown()
-        logger.info("Pipeline shutdown complete")
+    def shutdown(self, shutdown_ray: bool = False):
+        """
+        Shutdown pipeline components.
+        
+        Args:
+            shutdown_ray: If True, shutdown Ray. If False, keep Ray alive for reuse.
+        """
+        if shutdown_ray:
+            self.merchant_normalizer.shutdown()
+            logger.info("Pipeline shutdown complete (Ray shutdown)")
 
 
 # Helper function for CLI
 def process_financial_data(csv_path: str) -> Tuple[pd.DataFrame, Dict]:
     """
-    Convenience function to process a CSV file.
+    Helper function to process a CSV file.
     
     Args:
         csv_path: Path to CSV file (string)
@@ -205,4 +210,13 @@ def process_financial_data(csv_path: str) -> Tuple[pd.DataFrame, Dict]:
         df, metadata = pipeline.process_csv(Path(csv_path))
         return df, metadata
     finally:
-        pipeline.shutdown()
+        # Don't shutdown Ray - keep it alive for reuse
+        pipeline.shutdown(shutdown_ray=False)
+
+
+def shutdown_ray():
+    """Shutdown Ray cluster. Call this when exiting the CLI."""
+    import ray
+    if ray.is_initialized():
+        ray.shutdown()
+        logger.info("Ray cluster shutdown complete")
