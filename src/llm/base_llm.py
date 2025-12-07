@@ -76,37 +76,53 @@ class BaseLLM(ABC):
     
     def _build_prompt(self, merchant_name: str, available_categories: list) -> str:
         """
-        Build normalization prompt for LLM.
+        Build normalization prompt for LLM with strict instructions and examples.
         
         Args:
             merchant_name: Merchant name to normalize
             available_categories: Available categories
             
         Returns:
-            Formatted prompt string
+            Formatted prompt string with few-shot learning technique
         """
-        categories_str = ", ".join(available_categories)
+        # Format categories as numbered list for clarity
+        categories_str = "\n   ".join(f"{i+1}. {cat}" for i, cat in enumerate(available_categories))
         
         prompt = f"""You are a financial transaction categorization expert. Your task is to normalize merchant names and assign categories.
 
-        Merchant name: "{merchant_name}"
+            Merchant name: "{merchant_name}"
 
-        Available categories: {categories_str}
+            STRICT REQUIREMENTS:
+            1. Normalize to the OFFICIAL brand name (e.g., "STARBUCKS #1234" → "Starbucks", not "starbucks" or "STARBUCKS")
+            - Use proper capitalization (Starbucks, Amazon, Uber)
+            - Remove transaction codes, location numbers, asterisks
+            - Keep only the core brand name
+            2. Choose EXACTLY ONE category from this list (DO NOT create new categories):
+            {categories_str}
+            3. If uncertain, use "Other" - NEVER invent categories
+            4. Provide confidence score (0.0-1.0) based on certainty
 
-        Instructions:
-        1. Normalize the merchant name to its standard form (e.g., "UBER *TRIP 12345" → "Uber")
-        2. Assign ONE category from the available categories
-        3. Provide a confidence score (0.0-1.0)
+            EXAMPLES OF CORRECT NORMALIZATION:
+            {{"normalized_name": "Starbucks", "category": "Food & Dining", "confidence": 0.95, "reasoning": "Coffee shop chain"}}
+            {{"normalized_name": "Uber", "category": "Transportation", "confidence": 0.90, "reasoning": "Ride-sharing service indicator *TRIP"}}
+            {{"normalized_name": "Amazon", "category": "Shopping", "confidence": 0.85, "reasoning": "Online marketplace"}}
+            {{"normalized_name": "Netflix", "category": "Entertainment", "confidence": 0.95, "reasoning": "Streaming service"}}
+            {{"normalized_name": "Shell", "category": "Transportation", "confidence": 0.90, "reasoning": "Gas station"}}
 
-        Respond ONLY with valid JSON in this exact format:
-        {{
-            "normalized_name": "Standard Merchant Name",
-            "category": "Category Name",
-            "confidence": 0.95,
-            "reasoning": "Brief explanation"
-        }}
+            NORMALIZATION RULES:
+            - "UBER *TRIP 12345" → "Uber" (not "UBER" or "uber")
+            - "amazon.com*123ABC" → "Amazon" (not "Amazon.com")
+            - "MCDONALDS #5678" → "McDonald's" (not "MCDONALDS" or "McDonalds")
+            - "WALGREENS STORE" → "Walgreens" (not "WALGREENS STORE")
 
-        Do not include any other text, markdown formatting, or code blocks. Only the JSON object."""
+            Respond ONLY with valid JSON (no markdown, no code blocks, no extra text):
+            {{
+                "normalized_name": "Proper Brand Name",
+                "category": "MUST be from numbered list above",
+                "confidence": 0.0-1.0,
+                "reasoning": "Brief explanation"
+            }}"""
+        
         return prompt
     
     def _update_stats(self, tokens_used: int):
