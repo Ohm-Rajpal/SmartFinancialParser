@@ -18,7 +18,8 @@ pytest-mock
 pytest-asyncio
 black
 flake8
-mypy
 pylint
 requests
 tenacity
+ciso8601
+dateparser
