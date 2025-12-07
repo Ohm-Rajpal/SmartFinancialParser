@@ -32,24 +32,12 @@ class Config:
     # ==========================================
     # AWS Configuration
     # ==========================================
-    AWS_REGION = os.getenv("AWS_REGION", "us-west-2")
+    AWS_REGION = os.getenv("AWS_REGION", "us-west-1")
     AWS_S3_BUCKET = os.getenv("AWS_S3_BUCKET", "financial-parser-ohm-2025")
     
     # S3 path for storing analysis
     S3_ANALYSES_PREFIX = "analyses"  # s3://bucket/analyses/
     
-    # ==========================================
-    # AWS Secrets Manager
-    # ==========================================
-    SECRET_OPENAI_KEY = os.getenv("SECRET_OPENAI_KEY")
-    SECRET_GEMINI_KEY = os.getenv("SECRET_GEMINI_KEY")
-    SECRET_ENCRYPTION_KEY = os.getenv("SECRET_ENCRYPTION_KEY")
-    
-    # ==========================================
-    # Local Development Fallback
-    # ==========================================
-
-    # In production use AWS Secrets Managers
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
     
