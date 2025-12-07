@@ -128,6 +128,229 @@ class Config:
             "book", "education"
         ]
     }
+
+    # ground truth for AI evaluation
+    MERCHANTS_WITH_CATEGORIES = [
+        {
+            "clean_name": "Starbucks",
+            "category": "Food & Dining",
+            "variations": [
+                "STARBUCKS",
+                "Starbucks Coffee",
+                "STARBUCKS #1234",
+                "Starbucks Corp",
+                "starbucks",
+                "SBUX"
+            ]
+        },
+        {
+            "clean_name": "Uber",
+            "category": "Transportation",
+            "variations": [
+                "UBER *TRIP",
+                "Uber Technologies",
+                "UBER EATS",
+                "Uber",
+                "uber *trip 12345",
+                "UBER BV"
+            ]
+        },
+        {
+            "clean_name": "Amazon",
+            "category": "Shopping",
+            "variations": [
+                "AMAZON.COM",
+                "Amazon Marketplace",
+                "AMZN Mktp US",
+                "Amazon Prime",
+                "amazon.com*123",
+                "AMZ*Amazon"
+            ]
+        },
+        {
+            "clean_name": "McDonald's",
+            "category": "Food & Dining",
+            "variations": [
+                "MCDONALDS",
+                "McDonald's #123",
+                "MCD*McDonalds",
+                "McDonalds F12345",
+                "mc donalds"
+            ]
+        },
+        {
+            "clean_name": "Shell Gas",
+            "category": "Transportation",
+            "variations": [
+                "SHELL OIL",
+                "Shell 12345678",
+                "SHELL GAS STATION",
+                "Shell - Richmond",
+                "shell gas"
+            ]
+        },
+        {
+            "clean_name": "Walgreens",
+            "category": "Healthcare",
+            "variations": [
+                "WALGREENS #123",
+                "Walgreens Store",
+                "WAG*Walgreens",
+                "WALGREENS PHARMACY"
+            ]
+        },
+        {
+            "clean_name": "Target",
+            "category": "Shopping",
+            "variations": [
+                "TARGET",
+                "Target Store",
+                "TGT*TARGET",
+                "Target #1234",
+                "target.com"
+            ]
+        },
+        {
+            "clean_name": "Whole Foods",
+            "category": "Food & Dining",
+            "variations": [
+                "WHOLE FOODS",
+                "Whole Foods Market",
+                "WFM*Whole Foods",
+                "WHOLEFDS"
+            ]
+        },
+        {
+            "clean_name": "Netflix",
+            "category": "Entertainment",
+            "variations": [
+                "NETFLIX.COM",
+                "Netflix Subscription",
+                "NETFLIX *STREAMING",
+                "Netflix Inc"
+            ]
+        },
+        {
+            "clean_name": "AT&T",
+            "category": "Bills & Utilities",
+            "variations": [
+                "ATT*BILL PAYMENT",
+                "AT&T Wireless",
+                "AT&T MOBILITY",
+                "ATandT"
+            ]
+        },
+        {
+            "clean_name": "CVS",
+            "category": "Shopping",
+            "variations": [
+                "CVS/PHARMACY",
+                "CVS #1234",
+                "CVS STORE",
+                "CVS/pharmacy"
+            ]
+        },
+        {
+            "clean_name": "Chevron",
+            "category": "Transportation",
+            "variations": [
+                "CHEVRON",
+                "Chevron Gas",
+                "CHEVRON #123456",
+                "chevron station"
+            ]
+        },
+        {
+            "clean_name": "Safeway",
+            "category": "Food & Dining",
+            "variations": [
+                "SAFEWAY",
+                "Safeway Store",
+                "SAFEWAY #1234",
+                "Safeway Inc"
+            ]
+        },
+        {
+            "clean_name": "Lyft",
+            "category": "Transportation",
+            "variations": [
+                "LYFT *RIDE",
+                "Lyft Inc",
+                "lyft *ride 12345",
+                "LYFT"
+            ]
+        },
+        {
+            "clean_name": "Spotify",
+            "category": "Entertainment",
+            "variations": [
+                "SPOTIFY",
+                "Spotify USA",
+                "SPOTIFY *PREMIUM",
+                "spotify.com"
+            ]
+        },
+        {
+            "clean_name": "Costco",
+            "category": "Shopping",
+            "variations": [
+                "COSTCO WHSE",
+                "Costco Wholesale",
+                "COSTCO #123",
+                "costco"
+            ]
+        },
+        {
+            "clean_name": "Home Depot",
+            "category": "Shopping",
+            "variations": [
+                "HOME DEPOT",
+                "The Home Depot",
+                "HOMEDEPOT #1234",
+                "HD*Home Depot"
+            ]
+        },
+        {
+            "clean_name": "Trader Joe's",
+            "category": "Food & Dining",
+            "variations": [
+                "TRADER JOES",
+                "Trader Joe's",
+                "TJS*Trader Joes",
+                "TRADERJOES"
+            ]
+        },
+        {
+            "clean_name": "Chipotle",
+            "category": "Food & Dining",
+            "variations": [
+                "CHIPOTLE",
+                "Chipotle Mexican Grill",
+                "CHIPOTLE #1234",
+                "chipotle mexican"
+            ]
+        },
+        {
+            "clean_name": "Apple",
+            "category": "Shopping",
+            "variations": [
+                "APPLE.COM/BILL",
+                "Apple Store",
+                "APL*APPLE",
+                "Apple Inc"
+            ]
+        },
+        {
+            "clean_name": "PG&E",
+            "category": "Bills & Utilities",
+            "variations": [
+                "PGE BILL PAYMENT",
+                "PG&E Energy",
+                "PACIFIC GAS ELECTRIC",
+                "PG AND E"
+            ]
+        }
+    ]
     
     # ==========================================
     # Database Configuration

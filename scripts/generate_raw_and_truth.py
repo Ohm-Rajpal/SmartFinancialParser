@@ -22,6 +22,7 @@ Output:
 
 import random
 import csv
+from collections import Counter
 from datetime import datetime, timedelta
 from pathlib import Path
 import sys
@@ -29,150 +30,15 @@ import sys
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
+import pandas as pd
 from src.config import Config
 
 
 class MessyDataGenerator:
     """Generates intentionally messy transaction data for testing"""
     
-    # merchant names with common variations
-    MERCHANTS = {
-        "Starbucks": [
-            "STARBUCKS",
-            "Starbucks Coffee",
-            "STARBUCKS #1234",
-            "Starbucks Corp",
-            "starbucks",
-            "SBUX"
-        ],
-        "Uber": [
-            "UBER *TRIP",
-            "Uber Technologies",
-            "UBER EATS",
-            "Uber",
-            "uber *trip 12345",
-            "UBER BV"
-        ],
-        "Amazon": [
-            "AMAZON.COM",
-            "Amazon Marketplace",
-            "AMZN Mktp US",
-            "Amazon Prime",
-            "amazon.com*123",
-            "AMZ*Amazon"
-        ],
-        "McDonald's": [
-            "MCDONALDS",
-            "McDonald's #123",
-            "MCD*McDonalds",
-            "McDonalds F12345",
-            "mc donalds"
-        ],
-        "Shell Gas": [
-            "SHELL OIL",
-            "Shell 12345678",
-            "SHELL GAS STATION",
-            "Shell - Richmond",
-            "shell gas"
-        ],
-        "Walgreens": [
-            "WALGREENS #123",
-            "Walgreens Store",
-            "WAG*Walgreens",
-            "WALGREENS PHARMACY"
-        ],
-        "Target": [
-            "TARGET",
-            "Target Store",
-            "TGT*TARGET",
-            "Target #1234",
-            "target.com"
-        ],
-        "Whole Foods": [
-            "WHOLE FOODS",
-            "Whole Foods Market",
-            "WFM*Whole Foods",
-            "WHOLEFDS"
-        ],
-        "Netflix": [
-            "NETFLIX.COM",
-            "Netflix Subscription",
-            "NETFLIX *STREAMING",
-            "Netflix Inc"
-        ],
-        "AT&T": [
-            "ATT*BILL PAYMENT",
-            "AT&T Wireless",
-            "AT&T MOBILITY",
-            "ATandT"
-        ],
-        "CVS Pharmacy": [
-            "CVS/PHARMACY",
-            "CVS #1234",
-            "CVS STORE",
-            "CVS/pharmacy"
-        ],
-        "Chevron": [
-            "CHEVRON",
-            "Chevron Gas",
-            "CHEVRON #123456",
-            "chevron station"
-        ],
-        "Safeway": [
-            "SAFEWAY",
-            "Safeway Store",
-            "SAFEWAY #1234",
-            "Safeway Inc"
-        ],
-        "Lyft": [
-            "LYFT *RIDE",
-            "Lyft Inc",
-            "lyft *ride 12345",
-            "LYFT"
-        ],
-        "Spotify": [
-            "SPOTIFY",
-            "Spotify USA",
-            "SPOTIFY *PREMIUM",
-            "spotify.com"
-        ],
-        "Costco": [
-            "COSTCO WHSE",
-            "Costco Wholesale",
-            "COSTCO #123",
-            "costco"
-        ],
-        "Home Depot": [
-            "HOME DEPOT",
-            "The Home Depot",
-            "HOMEDEPOT #1234",
-            "HD*Home Depot"
-        ],
-        "Trader Joe's": [
-            "TRADER JOES",
-            "Trader Joe's",
-            "TJS*Trader Joes",
-            "TRADERJOES"
-        ],
-        "Chipotle": [
-            "CHIPOTLE",
-            "Chipotle Mexican Grill",
-            "CHIPOTLE #1234",
-            "chipotle mexican"
-        ],
-        "Apple": [
-            "APPLE.COM/BILL",
-            "Apple Store",
-            "APL*APPLE",
-            "Apple Inc"
-        ],
-        "PG&E": [
-            "PGE BILL PAYMENT",
-            "PG&E Energy",
-            "PACIFIC GAS ELECTRIC",
-            "PG AND E"
-        ]
-    }
+    # ground truth for AI evaluation
+    # required to be hardcoded to truly benchmark AI
     
     # Security test casess
     EDGE_CASE_MERCHANTS = [
@@ -301,10 +167,10 @@ class MessyDataGenerator:
         """Generate a random merchant name with variations"""
         # 90% real merchants, 10% edge cases
         if random.random() < 0.9:
-            # Pick a random base merchant
-            base_merchant = random.choice(list(self.MERCHANTS.keys()))
+            # Pick a random merchant
+            merchant_data = random.choice(Config.MERCHANTS_WITH_CATEGORIES)
             # Pick a random variation
-            merchant = random.choice(self.MERCHANTS[base_merchant])
+            merchant = random.choice(merchant_data["variations"])
         else:
             # Edge case merchant
             merchant = random.choice(self.EDGE_CASE_MERCHANTS)
@@ -315,40 +181,76 @@ class MessyDataGenerator:
         
         return merchant
     
-    def generate_transaction(self) -> dict:
-        """Generate a single transaction with messy data (3 columns only)"""
-        return {
+
+    def generate_transaction(self) -> tuple:
+        """
+        Generate transaction with explicit category mapping.
+        
+        Ground truth uses hardcoded categories to benchmark the AI.
+        """
+        # Pick random merchant
+        merchant_data = random.choice(Config.MERCHANTS_WITH_CATEGORIES)
+        
+        # Pick random variation
+        messy_name = random.choice(merchant_data["variations"])
+        
+        # Ground truth from explicit category mapping
+        ground_truth = {
+            "clean_merchant": merchant_data["clean_name"],
+            "true_category": merchant_data["category"]
+        }
+        
+        transaction = {
             "date": self.generate_random_date(),
-            "merchant": self.generate_random_merchant(),
+            "merchant": messy_name,
             "amount": self.generate_random_amount()
         }
+        
+        return transaction, ground_truth
     
-    def generate_csv(self) -> Path:
+    def generate_csv(self) -> tuple:
         """
-        Generate messy CSV file with 3 columns: date, merchant, amount.
+        Generate both messy CSV and ground truth CSV. This is crucial to evaluate
+        performance of my AI powered data pipeline.
         
         Returns:
-            Path to generated CSV file
+            Tuple of (messy_csv_path, ground_truth_csv_path)
         """
         print(f"Generating {self.num_transactions} messy transactions...")
         
-        # Generate transactions
-        transactions = [self.generate_transaction() for _ in range(self.num_transactions)]
+        transactions = []
+        ground_truths = []
         
-        # Write to CSV (3 columns only)
-        with open(self.output_path, 'w', newline='', encoding='utf-8') as f:
-            writer = csv.DictWriter(f, fieldnames=["date", "merchant", "amount"])
-            writer.writeheader()
-            writer.writerows(transactions)
+        for i in range(self.num_transactions):
+            txn, gt = self.generate_transaction()
+            
+            # Add row index to ground truth
+            gt["row_index"] = i
+            gt["messy_merchant"] = txn["merchant"]
+            
+            transactions.append(txn)
+            ground_truths.append(gt)
+        
+        # Save messy CSV
+        messy_df = pd.DataFrame(transactions)
+        messy_df.to_csv(self.output_path, index=False)
         
         print(f"   Generated messy data: {self.output_path}")
         print(f"   Total transactions: {self.num_transactions}")
         print(f"   File size: {self.output_path.stat().st_size:,} bytes")
         
-        # Print some statistics
-        self._print_statistics(transactions)
+        # Save ground truth CSV
+        gt_path = Config.GROUND_TRUTH_DIR / "ground_truth.csv"
+        gt_df = pd.DataFrame(ground_truths)
+        gt_df.to_csv(gt_path, index=False)
         
-        return self.output_path
+        print(f"   Generated ground truth: {gt_path}")
+        print(f"   Ground truth rows: {len(ground_truths)}")
+        
+        self._print_statistics(transactions)
+        self._print_ground_truth_statistics(ground_truths)
+        
+        return self.output_path, gt_path
     
     def _print_statistics(self, transactions: list):
         """Print statistics about generated data"""
@@ -402,6 +304,22 @@ class MessyDataGenerator:
         print("Unicode handling (special characters)")
         print("Refund/negative amount handling")
 
+    def _print_ground_truth_statistics(self, ground_truths: list):
+        """Print statistics about ground truth labels"""
+        print("\nGround Truth Statistics:")
+        
+        # Count unique clean merchants
+        unique_clean = len(set(gt["clean_merchant"] for gt in ground_truths))
+        print(f"   Unique clean merchants: {unique_clean}")
+        
+        
+        category_counts = Counter(gt["true_category"] for gt in ground_truths)
+        
+        print(f"   Category distribution (from explicit mapping):")
+        for category, count in sorted(category_counts.items(), key=lambda x: x[1], reverse=True):
+            percentage = (count / len(ground_truths)) * 100
+            print(f"      {category:30s} {count:4d} ({percentage:5.1f}%)")
+
 def main():
     """Main entry point"""
     print("=" * 70)
@@ -414,12 +332,13 @@ def main():
     Config.ensure_directories()
     
     # Generate data
-    generator = MessyDataGenerator()
-    csv_path = generator.generate_csv()
+    generator = MessyDataGenerator(num_transactions=500)
+    messy_csv_path, ground_truth_path = generator.generate_csv()
     
     print("\n" + "=" * 70)
-    print(f"  Success! Generated messy data at:")
-    print(f"   {csv_path}")
+    print(f"  Success! Generated data:")
+    print(f"   Messy CSV: {messy_csv_path}")
+    print(f"   Ground Truth: {ground_truth_path}")
     print("\n   CSV Format:")
     print("   Columns: date, merchant, amount")
     print("=" * 70)

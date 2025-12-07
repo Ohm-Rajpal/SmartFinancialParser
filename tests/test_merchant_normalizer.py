@@ -36,7 +36,9 @@ class TestMerchantNormalizerInitialization:
             normalizer = MerchantNormalizer()
             
             assert normalizer.available_categories == Config.MERCHANT_CATEGORIES
-            assert normalizer.batch_size == Config.BATCH_SIZE
+            assert normalizer.base_batch_size == Config.BATCH_SIZE
+            assert normalizer.min_batch_size == 5
+            assert normalizer.max_batch_size == 200
     
     def test_ray_initialization_when_not_initialized(self):
         """Test that Ray is initialized if not already initialized"""
@@ -70,10 +72,12 @@ class TestMerchantNormalizerInitialization:
         """Test that shutdown skips if Ray is not initialized"""
         with patch('src.normalization.merchant_normalizer.ray.is_initialized', return_value=False):
             with patch('src.normalization.merchant_normalizer.ray.shutdown') as mock_shutdown:
-                normalizer = MerchantNormalizer()
-                normalizer.shutdown()
-                
-                mock_shutdown.assert_not_called()
+                # Mock ray.init to prevent actual initialization
+                with patch('src.normalization.merchant_normalizer.ray.init'):
+                    normalizer = MerchantNormalizer()
+                    normalizer.shutdown()
+                    
+                    mock_shutdown.assert_not_called()
 
 
 class TestMerchantDeduplication:

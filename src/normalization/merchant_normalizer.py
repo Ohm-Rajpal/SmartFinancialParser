@@ -1,8 +1,7 @@
 """
 Merchant normalization using Ray for distributed processing.
 
-Using Ray to parallelize LLM calls to both
-GPT and Gemini, then use ensemble voting to select optimal result.
+Using Ray to parallelize LLM calls to Gemini for merchant normalization.
 """
 
 import logging
@@ -28,8 +27,9 @@ class MerchantNormalizer:
     1. Avoid double processing merchants
     2. Split batches for Ray parallelization
     3. Each Ray worker processes one batch:
-       - For a merchant, call GPT and Gemini sequentially
-       - Use logic from model_comparator for the ensemble voting algo
+       - For a merchant, call Gemini first
+       - If Gemini confidence < threshold, also call OpenAI and use ensemble voting
+       - Otherwise, use Gemini result directly (more accurate on average based on empirical testing)
     4. Perform a reduce task by aggregating results from all Ray workers
     """
     
@@ -55,7 +55,7 @@ class MerchantNormalizer:
         merchant_names: List[str]
     ) -> Dict[str, MerchantNormalizationResult]:
         """
-        Normalize a list of merchant names using Ray + dual LLMs.
+        Normalize a list of merchant names using Ray + hybrid AI model selection algorithm.
         
         Args:
             merchant_names: List of raw merchant names (has duplicates potentially)
@@ -134,7 +134,7 @@ async def process_batch_async(
     available_categories: List[str]
 ) -> Dict[str, MerchantNormalizationResult]:
     """
-    Process batch with async LLM calls for 2x speedup than before
+    Process batch with async Gemini calls. Ensemble voting if low confidence.
     
     Args:
         merchant_batch: List of merchant names to process
@@ -151,21 +151,28 @@ async def process_batch_async(
     
     for merchant in merchant_batch:
         try:
-            gpt_task = asyncio.to_thread(
-                gpt_client.normalize_merchant,
-                merchant,
-                available_categories
-            )
+            # Always call Gemini first (fast and cheap)
             gemini_task = asyncio.to_thread(
                 gemini_client.normalize_merchant,
                 merchant,
                 available_categories
             )
+            gemini_result = await gemini_task
             
-            gpt_result, gemini_result = await asyncio.gather(gpt_task, gemini_task)
-            
-            # use ensemble voting to select the best result
-            results[merchant] = CategoryAnalyzer.compare_results(gpt_result, gemini_result)
+            # If Gemini confidence is low, also call OpenAI and use ensemble voting
+            if gemini_result.confidence < 0.40:
+                logger.debug(f"Low Gemini confidence ({gemini_result.confidence:.2f}) for '{merchant}', calling OpenAI for ensemble voting")
+                gpt_task = asyncio.to_thread(
+                    gpt_client.normalize_merchant,
+                    merchant,
+                    available_categories
+                )
+                gpt_result = await gpt_task
+                # Use ensemble voting when both models are called
+                results[merchant] = CategoryAnalyzer.compare_results(gpt_result, gemini_result)
+            else:
+                # High confidence from Gemini, use it directly (faster, cheaper)
+                results[merchant] = gemini_result
             
         except Exception as e:  # handle errors gracefully
             logger.error(f"Failed to normalize merchant '{merchant}': {e}")
@@ -174,7 +181,7 @@ async def process_batch_async(
                 normalized_name=merchant,
                 category="Other",
                 confidence=0.0,
-                model_name="ensemble",
+                model_name="fallback",
                 processing_time=0.0,
                 reasoning=f"Error: {str(e)}"
             )

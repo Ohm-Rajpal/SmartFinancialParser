@@ -19,7 +19,7 @@ import ray
 
 from src.config import Config
 from src.pipeline.ray_pipeline import process_financial_data, shutdown_ray
-from scripts.generate_messy_data import MessyDataGenerator
+from scripts.generate_raw_and_truth import MessyDataGenerator
 
 # Configure logging for CLI
 logging.basicConfig(
@@ -28,6 +28,109 @@ logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S'
 )
 logger = logging.getLogger(__name__)
+
+
+def compare_with_ground_truth(clean_csv_path, ground_truth_csv_path) -> dict:
+    """
+    Compare clean_transactions.csv with ground_truth.csv using fuzzy matching.
+    This is evaluating the AI's accuracy.
+    """
+    try:
+        # Read both CSVs
+        clean_df = pd.read_csv(clean_csv_path)
+        gt_df = pd.read_csv(ground_truth_csv_path)
+        
+        # both should have same number of rows
+        min_rows = min(len(clean_df), len(gt_df))
+        clean_df = clean_df.head(min_rows)
+        gt_df = gt_df.head(min_rows)
+        
+        # fuzzy matching
+        def names_match(predicted: str, truth: str) -> bool:
+            """
+            Fuzzy matching for merchant names.
+            
+            Handles valid variations like:
+            - "Shell" vs "Shell Gas" (substring)
+            - "McDonald's" vs "McDonalds" (apostrophe)
+            - "STARBUCKS" vs "Starbucks" (case)
+            """
+            # Normalize both names
+            pred_norm = str(predicted).lower().strip().replace("'", "").replace(".", "").replace("-", "")
+            truth_norm = str(truth).lower().strip().replace("'", "").replace(".", "").replace("-", "")
+            
+            # Exact match after normalization
+            if pred_norm == truth_norm:
+                return True
+            
+            # Substring match (handles "Shell" vs "Shell Gas")
+            if pred_norm in truth_norm or truth_norm in pred_norm:
+                return True
+            
+            # Check if they share the same first word (handles "Trader Joes" vs "Trader Joe's")
+            pred_words = pred_norm.split()
+            truth_words = truth_norm.split()
+            if pred_words and truth_words and pred_words[0] == truth_words[0]:
+                return True
+            return False
+        
+        # Compare merchant names with fuzzy matching
+        merchant_matches = sum(
+            1 for pred, truth in zip(clean_df['merchant'], gt_df['clean_merchant'])
+            if names_match(pred, truth)
+        )
+        
+        # Compare categories (exact match - this is straightforward)
+        category_matches = (gt_df['true_category'] == clean_df['category']).sum()
+        
+        total = len(clean_df)
+        merchant_accuracy = (merchant_matches / total) * 100 if total > 0 else 0.0
+        category_accuracy = (category_matches / total) * 100 if total > 0 else 0.0
+        
+        return {
+            'merchant_matches': merchant_matches,
+            'merchant_total': total,
+            'merchant_accuracy': merchant_accuracy,
+            'category_matches': category_matches,
+            'category_accuracy': category_accuracy
+        }
+        
+    except Exception as e:
+        logger.error(f"Error comparing with ground truth: {e}", exc_info=True)
+        return {
+            'merchant_matches': 0,
+            'merchant_total': 0,
+            'merchant_accuracy': 0.0,
+            'category_matches': 0,
+            'category_accuracy': 0.0,
+            'error': str(e)
+        }
+
+
+def display_accuracy_metrics(metrics: dict):
+    """
+    Display accuracy metrics comparing system output with ground truth.
+    
+    Args:
+        metrics: Dictionary with accuracy metrics from compare_with_ground_truth
+    """
+    if 'error' in metrics:
+        print(f"\nWarning: Could not calculate accuracy metrics: {metrics['error']}")
+        return
+    
+    print("\n" + "=" * 100)
+    print("Accuracy Metrics (vs Ground Truth)")
+    print("=" * 100)
+    
+    print(f"\nMerchant Name Accuracy:")
+    print(f"  Matches: {metrics['merchant_matches']}/{metrics['merchant_total']}")
+    print(f"  Accuracy: {metrics['merchant_accuracy']:.2f}%")
+    
+    print(f"\nCategory Accuracy:")
+    print(f"  Matches: {metrics['category_matches']}/{metrics['merchant_total']}")
+    print(f"  Accuracy: {metrics['category_accuracy']:.2f}%")
+    
+    print("=" * 100 + "\n")
 
 
 def display_results(df: pd.DataFrame, metadata: Dict):
@@ -78,13 +181,14 @@ def generate_and_process(num_transactions: int) -> bool:
     try:
         # Generate messy data
         generator = MessyDataGenerator(num_transactions=num_transactions)
-        csv_path = generator.generate_csv()
+        messy_csv_path, ground_truth_path = generator.generate_csv()
         
-        print(f"Generated test data: {csv_path}")
+        print(f"Generated test data: {messy_csv_path}")
+        print(f"Generated ground truth: {ground_truth_path}")
         
         # Process the generated data
         print("\nProcessing transactions...")
-        df, metadata = process_financial_data(str(csv_path))
+        df, metadata = process_financial_data(str(messy_csv_path))
         
         # Display results
         display_results(df, metadata)
@@ -98,6 +202,10 @@ def generate_and_process(num_transactions: int) -> bool:
         print(f"Results saved to: {output_path}")
         print(f"Total rows saved: {len(df)}")
         print("=" * 100 + "\n")
+        
+        # Compare with ground truth and calculate accuracy
+        accuracy_metrics = compare_with_ground_truth(output_path, ground_truth_path)
+        display_accuracy_metrics(accuracy_metrics)
         
         # flush output so frontend does not get interrupted by Ray's logs
         sys.stdout.flush()
@@ -189,7 +297,6 @@ def main():
         print("\nOptions:")
         print("  0. Exit")
         print("  1. Generate and process transactions")
-        # todo: add more functionality here to include retrieving data from S3
 
         try:
             choice = input("\nEnter your choice: ").strip()
