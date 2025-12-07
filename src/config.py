@@ -49,7 +49,7 @@ class Config:
     # Local Development Fallback
     # ==========================================
 
-    # In production use AWS Secrets Manager
+    # In production use AWS Secrets Managers
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
     
@@ -318,7 +318,7 @@ class Config:
                 missing_vars.append(var_name)
         
         if missing_vars:
-            print(f"❌ Missing required environment variables: {', '.join(missing_vars)}")
+            print(f"Missing required environment variables: {', '.join(missing_vars)}")
             return False
         
         return True
