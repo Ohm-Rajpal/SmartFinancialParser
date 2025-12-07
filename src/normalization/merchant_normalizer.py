@@ -7,8 +7,7 @@ GPT and Gemini, then use ensemble voting to select optimal result.
 
 import logging
 import time
-from typing import List, Dict, Tuple
-from collections import Counter
+from typing import List, Dict
 import ray
 
 from src.config import Config
@@ -127,10 +126,23 @@ def process_batch_remote(
     results = {}
     
     for merchant in merchant_batch:
-        gpt_result = gpt_client.normalize_merchant(merchant, available_categories)
-        gemini_result = gemini_client.normalize_merchant(merchant, available_categories)
-        # ensemble algo from model comparator
-        results[merchant] = CategoryAnalyzer.compare_results(gpt_result, gemini_result)
+        try:
+            gpt_result = gpt_client.normalize_merchant(merchant, available_categories)
+            gemini_result = gemini_client.normalize_merchant(merchant, available_categories)
+            # ensemble algo from model comparator
+            results[merchant] = CategoryAnalyzer.compare_results(gpt_result, gemini_result)
+        except Exception as e: # added layer of protection
+            logger.error(f"Failed to normalize merchant '{merchant}': {e}")
+            # Add fallback result
+            results[merchant] = MerchantNormalizationResult(
+                original_name=merchant,
+                normalized_name=merchant,
+                category="Other",
+                confidence=0.0,
+                model_name="ensemble",
+                processing_time=0.0,
+                reasoning=f"Error: {str(e)}"
+            )
     
     logger.info(f"Worker completed batch: {len(results)} merchants normalized")
     return results
