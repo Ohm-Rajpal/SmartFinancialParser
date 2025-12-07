@@ -12,6 +12,7 @@ Flags issues without stopping processing
 
 import logging
 from typing import Dict, List, Tuple, Optional
+import pandas as pd
 
 from src.config import Config
 
@@ -117,6 +118,14 @@ class DataValidator:
         Returns:
             Tuple of (is_valid, issue_description)
         """
+        # Handle None, NaN, or non-string types (from pandas)
+        if merchant_str is None or (isinstance(merchant_str, float) and pd.isna(merchant_str)):
+            return (False, "missing_merchant")
+        
+        # Convert to string if not already
+        if not isinstance(merchant_str, str):
+            merchant_str = str(merchant_str)
+        
         if not merchant_str:
             return (False, "missing_merchant")
         

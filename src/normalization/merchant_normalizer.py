@@ -6,6 +6,7 @@ GPT and Gemini, then use ensemble voting to select optimal result.
 """
 
 import logging
+import asyncio
 import time
 from typing import List, Dict
 import ray
@@ -35,7 +36,9 @@ class MerchantNormalizer:
     def __init__(self):
         """Initialize merchant normalizer"""
         self.available_categories = Config.MERCHANT_CATEGORIES
-        self.batch_size = Config.BATCH_SIZE
+        self.base_batch_size = Config.BATCH_SIZE  # Base batch size from config (used as fallback)
+        self.min_batch_size = 5   # Minimum merchants per batch
+        self.max_batch_size = 200  # Maximum merchants per batch
 
         # initialize ray
         if not ray.is_initialized():
@@ -73,8 +76,10 @@ class MerchantNormalizer:
         logger.info(f"Processing {len(unique_merchants_list)} unique merchants from {len(merchant_names)} total")
 
         # split batches
-        batches = [unique_merchants_list[i:i+Config.BATCH_SIZE] for i in range(0, len(unique_merchants_list), Config.BATCH_SIZE)]
-        logger.info(f"Split into {len(batches)} batches of size: {Config.BATCH_SIZE}")
+        optimal_batch_size = self._calculate_optimal_batch_size(len(unique_merchants_list))
+        batches = [unique_merchants_list[i:i+optimal_batch_size] for i in range(0, len(unique_merchants_list), 
+                optimal_batch_size)]
+        logger.info(f"Split into {len(batches)} batches of size: {optimal_batch_size}")
         
         # parallel processing
         futures = [process_batch_remote.remote(batch, self.available_categories) for batch in batches]
@@ -98,28 +103,45 @@ class MerchantNormalizer:
             ray.shutdown()
             logger.info("Ray shutdown complete")
 
-@ray.remote
-def process_batch_remote(
+    def _calculate_optimal_batch_size(self, total_merchants: int) -> int:
+        """
+        Helper function to calculate optimal batch size based on number of merchants
+        which will improve parallelism.
+        
+        Args:
+            total_merchants: Total number of unique merchants to process
+            
+        Returns:
+            Optimal batch size
+        """
+        num_cpus = Config.RAY_NUM_CPUS
+        
+        ideal_batch_size = max(1, total_merchants // num_cpus)
+        
+        # restrict batch size
+        batch_size = max(self.min_batch_size, min(ideal_batch_size, self.max_batch_size))
+        
+        logger.info(f"Calculated optimal batch size: {batch_size} for {total_merchants} merchants on {num_cpus} CPUs")
+        
+        return batch_size
+
+# Previously was using sequential processing but it was too slow
+# Async processing will speed up the process
+async def process_batch_async(
     merchant_batch: List[str],
     available_categories: List[str]
 ) -> Dict[str, MerchantNormalizationResult]:
     """
-    Ray remote function to process one batch of merchants.
-    
-    This runs in a separate Ray worker process.
-    For EACH merchant in the batch:
-    1. Call GPT to normalize
-    2. Call Gemini to normalize
-    3. Use ensemble voting to pick best result
+    Process batch with async LLM calls for 2x speedup than before
     
     Args:
-        merchant_batch: List of unique merchant names for this batch
-        available_categories: Valid categories
-        
+        merchant_batch: List of merchant names to process
+        available_categories: List of available categories
+
     Returns:
-        Dict mapping merchant -> final MerchantNormalizationResult
+        Dict mapping original merchant name -> MerchantNormalizationResult
     """
-    logger.info(f"Worker processing batch of {len(merchant_batch)} merchants")
+    logger.info(f"Worker processing batch of {len(merchant_batch)} merchants (async)")
     
     gpt_client = OpenAIClient()
     gemini_client = GeminiClient()
@@ -127,13 +149,24 @@ def process_batch_remote(
     
     for merchant in merchant_batch:
         try:
-            gpt_result = gpt_client.normalize_merchant(merchant, available_categories)
-            gemini_result = gemini_client.normalize_merchant(merchant, available_categories)
-            # ensemble algo from model comparator
+            gpt_task = asyncio.to_thread(
+                gpt_client.normalize_merchant,
+                merchant,
+                available_categories
+            )
+            gemini_task = asyncio.to_thread(
+                gemini_client.normalize_merchant,
+                merchant,
+                available_categories
+            )
+            
+            gpt_result, gemini_result = await asyncio.gather(gpt_task, gemini_task)
+            
+            # use ensemble voting to select the best result
             results[merchant] = CategoryAnalyzer.compare_results(gpt_result, gemini_result)
-        except Exception as e: # added layer of protection
+            
+        except Exception as e:  # handle errors gracefully
             logger.error(f"Failed to normalize merchant '{merchant}': {e}")
-            # Add fallback result
             results[merchant] = MerchantNormalizationResult(
                 original_name=merchant,
                 normalized_name=merchant,
@@ -146,3 +179,20 @@ def process_batch_remote(
     
     logger.info(f"Worker completed batch: {len(results)} merchants normalized")
     return results
+
+@ray.remote
+def process_batch_remote(
+    merchant_batch: List[str],
+    available_categories: List[str]
+) -> Dict[str, MerchantNormalizationResult]:
+    """
+    Ray remote function to process one batch of merchants using async processing
+    
+    Args:
+        merchant_batch: List of unique merchant names for this batch
+        available_categories: Valid categories
+        
+    Returns:
+        Dict mapping merchant -> final MerchantNormalizationResult
+    """
+    return asyncio.run(process_batch_async(merchant_batch, available_categories))

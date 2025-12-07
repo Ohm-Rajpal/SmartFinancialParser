@@ -12,6 +12,7 @@ All data must pass security validation before processing.
 import re
 import logging
 from typing import List, Tuple, Optional
+import pandas as pd
 
 from src.config import Config
 
@@ -192,6 +193,15 @@ class SecurityValidator:
         """
         issues = []
         
+        # Handle None, NaN, or non-string types (from pandas)
+        if merchant is None or (isinstance(merchant, float) and pd.isna(merchant)):
+            issues.append("Empty merchant name (None/NaN)")
+            return (False, issues)
+        
+        # Convert to string if not already
+        if not isinstance(merchant, str):
+            merchant = str(merchant)
+        
         # Check if empty
         if not merchant or not merchant.strip():
             issues.append("Empty merchant name")
@@ -258,12 +268,16 @@ class SecurityValidator:
         invalid = []
         
         for idx, merchant in enumerate(merchants):
+            # Convert NaN/None to empty string for consistent handling
+            if merchant is None or (isinstance(merchant, float) and pd.isna(merchant)):
+                merchant = ""
+            
             is_valid, issues = self.validate_merchant_name(merchant)
             
             if is_valid:
-                valid.append(merchant)
+                valid.append(merchant if merchant else "")  # Preserve empty string if valid
             else:
-                invalid.append((idx, merchant, issues))
+                invalid.append((idx, merchant if merchant else "", issues))
         
         if invalid:
             logger.warning(f"Batch validation: {len(invalid)}/{len(merchants)} merchants failed")

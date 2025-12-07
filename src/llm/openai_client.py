@@ -120,14 +120,16 @@ class OpenAIClient(BaseLLM):
             OpenAI response object
         """
         try:
+            # gpt-5-nano-2025-08-07 requires max_completion_tokens and doesn't support temperature=0
+            # It only supports the default temperature (1), so we omit the temperature parameter
             response = self.client.chat.completions.create(
                 model=self.model_name,
                 messages=[
                     {"role": "system", "content": "You are a financial transaction categorization expert. Respond only with valid JSON."},
                     {"role": "user", "content": prompt}
                 ],
-                temperature=0, 
-                max_tokens=Config.MAX_TOKENS,
+                # temperature=0 not supported by gpt-5-nano, uses default (1) instead
+                max_completion_tokens=Config.MAX_TOKENS,  # gpt-5-nano uses max_completion_tokens
                 timeout=Config.REQUEST_TIMEOUT,
                 response_format={"type": "json_object"}  # json
             )
