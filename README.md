@@ -875,7 +875,6 @@ grep "=1+1" data/raw/messy_transactions.csv
 - [ ] **Dependency Scanning** - Automated vulnerability scanning
 - [ ] **CI/CD Integration** - Automated testing and security scans
 - [ ] **Monitoring & Alerting** - Service health checks, utilization metrics, degradation alerts
-- [ ] **Secure Image Storage** - Encryption at rest and in transit for S3/cloud storage
 - [ ] **Access Controls** - IAM policies and least-privilege permissions
 
 
