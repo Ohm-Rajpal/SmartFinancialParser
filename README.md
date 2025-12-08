@@ -82,12 +82,15 @@ Smart Financial Parser can process 1000 transactions in 12 seconds with 95.54% m
 ### The Challenge: 222 Seconds → 7 Seconds on 500 tasks
 
 **Initial Implementation**
+
 Previously the code would take 222 seconds to process 500 rows of data which was incredibly slow. The LLM calling was done sequentially and I was only utilizing 4 Ray CPU workers. I would use an ensemble based approach to deal with cases where there was inconsistency in two LLM outputs. This would involve computing the result, comparing the confidence values between both LLMs, and choosing the output with a higher confidence value. Since Gemini and GPT frequently gave different outputs in the merchant name simplification, this would cause a significant amount of ensemble based tie-breaking calls which had a detrimental effect on performance.  
 
 **Iteration 2: Async Programming + More Workers**
+
 Next, I experimented with asynchronous programming using the same ensemble technique but this time increased the number of Ray CPU cores to 24 which sped up the code to 58 seconds, a much better performance but still not computationally as fast. I realized at this point that I had to come up with a more creative algorithm using AI to extract merchant information better.
 
 **Iteration 3: Adaptive Ensemble Algorithm + Async Programming + Multiple Workers**
+
 I came up with an algorithm where I would use Gemini API to give an output, and if the confidence level of Gemini is less than a certain threshold value that can be fine tuned as a hyperparameter, then I would call OpenAI API to do the analysis task on the data and then compare the results between Gemini and OpenAI and choose the higher confidence level output. This means I was essentially only using the ensemble tie breaking approach when Gemini was not confident with the output. 
 
 Using asynchronous programming, 24 Ray CPUs, and also the new algorithm, the code was sped up to 7 seconds. **This is 31 times better than my first iteration!**
@@ -614,7 +617,7 @@ AI is a tool, like Stack Overflow or documentation. The architecture, decisions,
    - **Defense**: Length validation, completeness checks, graceful degradation
 
 **Test Coverage:**
-- 31 CSV injection attempts detected in 500-row test dataset
+- 31 CSV injection attempts detected in 500-row test dataset (randomly generated)
 - 12 path traversal attempts detected and blocked
 - 100% detection rate with zero false positives
 
@@ -757,7 +760,7 @@ python -m src.cli 1000
 **Generate and process test data:**
 ```bash
 # Process N transactions
-python -m src.cli 500
+python -m src.cli 1000
 
 # Interactive mode (menu-driven)
 python -m src.cli
@@ -826,9 +829,6 @@ pytest tests/ -v
 
 # Run specific test file
 pytest tests/test_security.py -v
-
-# Run with coverage
-pytest tests/ --cov=src --cov-report=html
 ```
 
 ### Test Coverage
@@ -872,11 +872,11 @@ grep "=1+1" data/raw/messy_transactions.csv
 ## Path to Productization
 
 - [ ] **Containerization** - Docker packaging with secure base images
-- [ ] **Dependency Scanning** - Automated vulnerability scanning (Trivy, Snyk)
+- [ ] **Dependency Scanning** - Automated vulnerability scanning
 - [ ] **CI/CD Integration** - Automated testing and security scans
 - [ ] **Monitoring & Alerting** - Service health checks, utilization metrics, degradation alerts
 - [ ] **Secure Image Storage** - Encryption at rest and in transit for S3/cloud storage
-- [ ] **Access Controls** - IAM policies and least-privilege permissions 
+- [ ] **Access Controls** - IAM policies and least-privilege permissions
 
 
 ---
