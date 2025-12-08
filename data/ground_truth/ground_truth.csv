@@ -1,101 +1,501 @@
 clean_merchant,true_category,row_index,messy_merchant
-Home Depot,Shopping,0,The Home Depot
-Uber,Transportation,1,UBER EATS
-Starbucks,Food & Dining,2,SBUX
-Costco,Shopping,3,costco
-CVS,Shopping,4,CVS/PHARMACY
-Safeway,Food & Dining,5,Safeway Store
-=1+1,Other,6,=1+1
-CVS,Shopping,7,CVS STORE
-Apple,Shopping,8,APL*APPLE
-AT&T,Bills & Utilities,9,ATandT
-Amazon,Shopping,10,amazon.com*123
-Starbucks,Food & Dining,11,STARBUCKS
-AT&T,Bills & Utilities,12,AT&T Wireless
-Chevron,Transportation,13,CHEVRON
-PG&E,Bills & Utilities,14,PGE BILL PAYMENT
-Target,Shopping,15,Target Store
-Spotify,Entertainment,16,spotify.com
-CVS,Shopping,17,CVS/pharmacy
-Safeway,Food & Dining,18,Safeway Store
-Whole Foods,Food & Dining,19,WFM*Whole Foods
-Uber,Transportation,20,Uber
-Chevron,Transportation,21,CHEVRON
-Whole Foods,Food & Dining,22,WFM*Whole Foods
-Safeway,Food & Dining,23,SAFEWAY #1234
-McDonald's,Food & Dining,24,mc donalds
-Home Depot,Shopping,25,HOME DEPOT
-Chevron,Transportation,26,chevron station
-Store-With-Dashes,Other,27,Store-With-Dashes
-Normal Store & Co.,Other,28,Normal Store & Co.
-Costco,Shopping,29,COSTCO #123
-Whole Foods,Food & Dining,30,WFM*Whole Foods
-CVS,Shopping,31,CVS/pharmacy
+Spotify,Entertainment,0,SPOTIFY
+Uber,Transportation,1,Uber
+Chevron,Transportation,2,Chevron Gas
+Uber,Transportation,3,uber *trip 12345
+Chevron,Transportation,4,CHEVRON #123456
+Spotify,Entertainment,5,SPOTIFY
+Whole Foods,Food & Dining,6,WHOLEFDS
+Apple,Shopping,7,APL*APPLE
+PG&E,Bills & Utilities,8,PG AND E
+Lyft,Transportation,9,Lyft Inc
+McDonald's,Food & Dining,10,MCD*McDonalds
+Whole Foods,Food & Dining,11,Whole Foods Market
+Uber,Transportation,12,UBER EATS
+PG&E,Bills & Utilities,13,PACIFIC GAS ELECTRIC
+Netflix,Entertainment,14,NETFLIX.COM
+Apple,Shopping,15,Apple Store
+Safeway,Food & Dining,16,SAFEWAY #1234
+Lyft,Transportation,17,Lyft Inc
+Apple,Shopping,18,APPLE.COM/BILL
+McDonald's,Food & Dining,19,MCD*McDonalds
+Starbucks,Food & Dining,20,Starbucks Coffee
+Safeway,Food & Dining,21,SAFEWAY
+Uber,Transportation,22,UBER BV
+McDonald's,Food & Dining,23,MCD*McDonalds
+Netflix,Entertainment,24,Netflix Inc
+Target,Shopping,25,TGT*TARGET
+CVS,Shopping,26,CVS/pharmacy
+PG&E,Bills & Utilities,27,PACIFIC GAS ELECTRIC
+Walgreens,Healthcare,28,Walgreens Store
+Target,Shopping,29,Target Store
+Lyft,Transportation,30,Lyft Inc
+Amazon,Shopping,31,amazon.com*123
 Safeway,Food & Dining,32,Safeway Inc
-CVS,Shopping,33,CVS STORE
-Costco,Shopping,34,Costco Wholesale
-Whole Foods,Food & Dining,35,Whole Foods Market
-McDonald's,Food & Dining,36,mc donalds
-McDonald's,Food & Dining,37,McDonalds F12345
-Chevron,Transportation,38,CHEVRON
-Lyft,Transportation,39,Lyft Inc
-Safeway,Food & Dining,40,SAFEWAY
-Home Depot,Shopping,41,HOMEDEPOT #1234
-PG&E,Bills & Utilities,42,PACIFIC GAS ELECTRIC
-Apple,Shopping,43,APL*APPLE
+AT&T,Bills & Utilities,33,ATandT
+McDonald's,Food & Dining,34,mc donalds
+Amazon,Shopping,35,amazon.com*123
+Netflix,Entertainment,36,NETFLIX *STREAMING
+Uber,Transportation,37,Uber
+Costco,Shopping,38,COSTCO WHSE
+CVS,Shopping,39,CVS STORE
+Home Depot,Shopping,40,HOME DEPOT
+Whole Foods,Food & Dining,41,WHOLEFDS
+Amazon,Shopping,42,Amazon Prime
+Amazon,Shopping,43,AMZ*Amazon
 =cmd|'/c calc'!A1,Other,44,=cmd|'/c calc'!A1
-Target,Shopping,45,Target Store
-Safeway,Food & Dining,46,SAFEWAY
-Apple,Shopping,47,Apple Inc
-PG&E,Bills & Utilities,48,PG AND E
+Uber,Transportation,45,UBER EATS
+Netflix,Entertainment,46,NETFLIX.COM
+Home Depot,Shopping,47,HOME DEPOT
+Target,Shopping,48,Target Store
 Home Depot,Shopping,49,The Home Depot
-Amazon,Shopping,50,AMZN Mktp US
-Safeway,Food & Dining,51,SAFEWAY
-Home Depot,Shopping,52,HOMEDEPOT #1234
-Trader Joe's,Food & Dining,53,TJS*Trader Joes
-CVS,Shopping,54,CVS/pharmacy
-Chevron,Transportation,55,chevron station
-Chipotle,Food & Dining,56,chipotle mexican
-Netflix,Entertainment,57,NETFLIX *STREAMING
-Safeway,Food & Dining,58,Safeway Inc
-Netflix,Entertainment,59,Netflix Inc
-Home Depot,Shopping,60,HOME DEPOT
-Trader Joe's,Food & Dining,61,TRADER JOES
-Home Depot,Shopping,62,HD*Home Depot
-Lyft,Transportation,63,LYFT
-Walgreens,Healthcare,64,Walgreens Store
-Costco,Shopping,65,COSTCO #123
-Home Depot,Shopping,66,HD*Home Depot
-CVS,Shopping,67,CVS/pharmacy
+McDonald's,Food & Dining,50,McDonald's #123
+Store's Apostrophe,Other,51,Store's Apostrophe
+Chevron,Transportation,52,CHEVRON
+Chevron,Transportation,53,Chevron Gas
+Chevron,Transportation,54,Chevron Gas
+Shell Gas,Transportation,55,shell gas
+Starbucks,Food & Dining,56,STARBUCKS
+Amazon,Shopping,57,AMAZON.COM
+PG&E,Bills & Utilities,58,PG AND E
+../root/.ssh/id_rsa,Other,59,../root/.ssh/id_rsa
+Amazon,Shopping,60,AMZN Mktp US
+/etc/passwd,Other,61,/etc/passwd
+Chipotle,Food & Dining,62,Chipotle Mexican Grill
+CVS,Shopping,63,CVS STORE
+AT&T,Bills & Utilities,64,AT&T Wireless
+Uber,Transportation,65,Uber Technologies
+Shell Gas,Transportation,66,Shell - Richmond
+Chevron,Transportation,67,Chevron Gas
 Chevron,Transportation,68,CHEVRON #123456
-Safeway,Food & Dining,69,Safeway Store
-Costco,Shopping,70,costco
-Chevron,Transportation,71,Chevron Gas
-Amazon,Shopping,72,AMZ*Amazon
-Walgreens,Healthcare,73,WALGREENS PHARMACY
-AT&T,Bills & Utilities,74,ATandT
-Starbucks,Food & Dining,75,Starbucks Corp
-Home Depot,Shopping,76,HOMEDEPOT #1234
-Costco,Shopping,77,COSTCO #123
-Chipotle,Food & Dining,78,Chipotle Mexican Grill
-CVS,Shopping,79,CVS/PHARMACY
-Netflix,Entertainment,80,Netflix Subscription
-Chevron,Transportation,81,Chevron Gas
-PG&E,Bills & Utilities,82,PGE BILL PAYMENT
-Chipotle,Food & Dining,83,CHIPOTLE
-PG&E,Bills & Utilities,84,PG&E Energy
-McDonald's,Food & Dining,85,MCD*McDonalds
-PG&E,Bills & Utilities,86,PGE BILL PAYMENT
-Safeway,Food & Dining,87,SAFEWAY #1234
-Apple,Shopping,88,Apple Store
-Netflix,Entertainment,89,NETFLIX.COM
-Walgreens,Healthcare,90,WAG*Walgreens
-Chipotle,Food & Dining,91,chipotle mexican
-Safeway,Food & Dining,92,SAFEWAY #1234
-Safeway,Food & Dining,93,SAFEWAY #1234
-=cmd|'/c calc'!A1,Other,94,=cmd|'/c calc'!A1
-Spotify,Entertainment,95,Spotify USA
-~/secret.txt,Other,96,~/secret.txt
-Apple,Shopping,97,Apple Store
-=cmd|'/c calc'!A1,Other,98,=cmd|'/c calc'!A1
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,Other,99,AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+CVS,Shopping,69,CVS #1234
+PG&E,Bills & Utilities,70,PACIFIC GAS ELECTRIC
+Apple,Shopping,71,Apple Inc
+Uber,Transportation,72,UBER EATS
+Lyft,Transportation,73,LYFT
+Whole Foods,Food & Dining,74,WHOLE FOODS
+Shell Gas,Transportation,75,Shell 12345678
+Whole Foods,Food & Dining,76,WHOLE FOODS
+Target,Shopping,77,target.com
+Uber,Transportation,78,UBER EATS
+Spotify,Entertainment,79,SPOTIFY *PREMIUM
+Safeway,Food & Dining,80,SAFEWAY
+McDonald's,Food & Dining,81,MCD*McDonalds
+CVS,Shopping,82,CVS #1234
+AT&T,Bills & Utilities,83,AT&T MOBILITY
+Chipotle,Food & Dining,84,Chipotle Mexican Grill
+McDonald's,Food & Dining,85,mc donalds
+Whole Foods,Food & Dining,86,Whole Foods Market
+CVS,Shopping,87,CVS/pharmacy
+@SUM(A1:A10),Other,88,@SUM(A1:A10)
+CVS,Shopping,89,CVS #1234
+Lyft,Transportation,90,LYFT *RIDE
+Shell Gas,Transportation,91,Shell - Richmond
+Home Depot,Shopping,92,The Home Depot
+Target,Shopping,93,target.com
+Spotify,Entertainment,94,SPOTIFY
+Safeway,Food & Dining,95,SAFEWAY
+Costco,Shopping,96,COSTCO #123
+Ürban Çafé,Other,97,Ürban Çafé
+Lyft,Transportation,98,LYFT *RIDE
+Uber,Transportation,99,UBER EATS
+Target,Shopping,100,Target Store
+McDonald's,Food & Dining,101,mc donalds
+Shell Gas,Transportation,102,SHELL GAS STATION
+Trader Joe's,Food & Dining,103,TRADER JOES
+PG&E,Bills & Utilities,104,PGE BILL PAYMENT
+Costco,Shopping,105,Costco Wholesale
+Starbucks,Food & Dining,106,SBUX
+Apple,Shopping,107,Apple Store
+Uber,Transportation,108,UBER EATS
+Trader Joe's,Food & Dining,109,TJS*Trader Joes
+Safeway,Food & Dining,110,SAFEWAY #1234
+Store's Apostrophe,Other,111,Store's Apostrophe
+Apple,Shopping,112,Apple Store
+Shell Gas,Transportation,113,SHELL OIL
+Store's Apostrophe,Other,114,Store's Apostrophe
+Shell Gas,Transportation,115,SHELL GAS STATION
+Amazon,Shopping,116,amazon.com*123
+/etc/passwd,Other,117,/etc/passwd
+Chevron,Transportation,118,Chevron Gas
+Uber,Transportation,119,Uber Technologies
+Lyft,Transportation,120,LYFT
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,Other,121,AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+Whole Foods,Food & Dining,122,WHOLE FOODS
+Chipotle,Food & Dining,123,CHIPOTLE #1234
+Spotify,Entertainment,124,SPOTIFY *PREMIUM
+CVS,Shopping,125,CVS/PHARMACY
+CVS,Shopping,126,CVS #1234
+Apple,Shopping,127,APL*APPLE
+Whole Foods,Food & Dining,128,WHOLEFDS
+Chipotle,Food & Dining,129,Chipotle Mexican Grill
+Uber,Transportation,130,uber *trip 12345
+Chevron,Transportation,131,chevron station
+Costco,Shopping,132,COSTCO #123
+Shell Gas,Transportation,133,Shell 12345678
+Walgreens,Healthcare,134,WALGREENS #123
+Spotify,Entertainment,135,SPOTIFY *PREMIUM
+Costco,Shopping,136,COSTCO WHSE
+=cmd|'/c calc'!A1,Other,137,=cmd|'/c calc'!A1
+CVS,Shopping,138,CVS #1234
+Costco,Shopping,139,COSTCO WHSE
+Chevron,Transportation,140,chevron station
+CVS,Shopping,141,CVS/pharmacy
+McDonald's,Food & Dining,142,MCD*McDonalds
+Netflix,Entertainment,143,Netflix Subscription
+Whole Foods,Food & Dining,144,WHOLE FOODS
+Normal Store & Co.,Other,145,Normal Store & Co.
+Shell Gas,Transportation,146,SHELL GAS STATION
+Apple,Shopping,147,APL*APPLE
+Lyft,Transportation,148,lyft *ride 12345
+Home Depot,Shopping,149,The Home Depot
+Whole Foods,Food & Dining,150,Whole Foods Market
+/etc/passwd,Other,151,/etc/passwd
+Trader Joe's,Food & Dining,152,TJS*Trader Joes
+Chevron,Transportation,153,Chevron Gas
+Chevron,Transportation,154,Chevron Gas
+Apple,Shopping,155,APL*APPLE
+Safeway,Food & Dining,156,SAFEWAY
+../root/.ssh/id_rsa,Other,157,../root/.ssh/id_rsa
+Trader Joe's,Food & Dining,158,TRADER JOES
+Uber,Transportation,159,UBER BV
+CVS,Shopping,160,CVS #1234
+Lyft,Transportation,161,LYFT *RIDE
+Trader Joe's,Food & Dining,162,TRADER JOES
+Costco,Shopping,163,Costco Wholesale
+Netflix,Entertainment,164,Netflix Subscription
+Spotify,Entertainment,165,spotify.com
+Trader Joe's,Food & Dining,166,TJS*Trader Joes
+Netflix,Entertainment,167,Netflix Inc
+Spotify,Entertainment,168,spotify.com
+Safeway,Food & Dining,169,SAFEWAY
+CVS,Shopping,170,CVS/pharmacy
+AT&T,Bills & Utilities,171,AT&T Wireless
+Trader Joe's,Food & Dining,172,TJS*Trader Joes
+AT&T,Bills & Utilities,173,AT&T Wireless
+PG&E,Bills & Utilities,174,PACIFIC GAS ELECTRIC
+Trader Joe's,Food & Dining,175,Trader Joe's
+Starbucks,Food & Dining,176,Starbucks Coffee
+PG&E,Bills & Utilities,177,PGE BILL PAYMENT
+Shell Gas,Transportation,178,SHELL GAS STATION
+Trader Joe's,Food & Dining,179,TRADERJOES
+CVS,Shopping,180,CVS/pharmacy
+Chipotle,Food & Dining,181,CHIPOTLE
+AT&T,Bills & Utilities,182,AT&T MOBILITY
+Home Depot,Shopping,183,HD*Home Depot
+Shell Gas,Transportation,184,Shell 12345678
+Starbucks,Food & Dining,185,Starbucks Coffee
+Walgreens,Healthcare,186,Walgreens Store
+Spotify,Entertainment,187,spotify.com
+AT&T,Bills & Utilities,188,ATT*BILL PAYMENT
+Home Depot,Shopping,189,HD*Home Depot
+Spotify,Entertainment,190,SPOTIFY *PREMIUM
+Apple,Shopping,191,Apple Inc
+Chipotle,Food & Dining,192,CHIPOTLE
+Target,Shopping,193,target.com
+Uber,Transportation,194,UBER *TRIP
+McDonald's,Food & Dining,195,MCDONALDS
+Shell Gas,Transportation,196,SHELL OIL
+McDonald's,Food & Dining,197,MCD*McDonalds
+Safeway,Food & Dining,198,SAFEWAY
+AT&T,Bills & Utilities,199,ATandT
+Home Depot,Shopping,200,The Home Depot
+../../etc/passwd,Other,201,../../etc/passwd
+Uber,Transportation,202,UBER EATS
+Walgreens,Healthcare,203,Walgreens Store
+CVS,Shopping,204,CVS #1234
+McDonald's,Food & Dining,205,McDonalds F12345
+Lyft,Transportation,206,LYFT *RIDE
+Home Depot,Shopping,207,HOMEDEPOT #1234
+Trader Joe's,Food & Dining,208,TRADER JOES
+Costco,Shopping,209,COSTCO WHSE
+CVS,Shopping,210,CVS/PHARMACY
+Trader Joe's,Food & Dining,211,TRADER JOES
+Chipotle,Food & Dining,212,CHIPOTLE #1234
+AT&T,Bills & Utilities,213,AT&T MOBILITY
+Spotify,Entertainment,214,SPOTIFY
+Normal Store & Co.,Other,215,Normal Store & Co.
+Costco,Shopping,216,COSTCO WHSE
+Amazon,Shopping,217,AMZ*Amazon
+Trader Joe's,Food & Dining,218,TRADER JOES
+Amazon,Shopping,219,Amazon Prime
+AT&T,Bills & Utilities,220,ATT*BILL PAYMENT
+Target,Shopping,221,target.com
+Trader Joe's,Food & Dining,222,Trader Joe's
+CVS,Shopping,223,CVS/PHARMACY
+AT&T,Bills & Utilities,224,ATandT
+Amazon,Shopping,225,Amazon Prime
+,Other,226,
+Target,Shopping,227,Target #1234
+Target,Shopping,228,Target Store
+Uber,Transportation,229,UBER EATS
+Store's Apostrophe,Other,230,Store's Apostrophe
+Chipotle,Food & Dining,231,Chipotle Mexican Grill
+=1+1,Other,232,=1+1
+Amazon,Shopping,233,AMZN Mktp US
+Lyft,Transportation,234,lyft *ride 12345
+Netflix,Entertainment,235,NETFLIX.COM
+Whole Foods,Food & Dining,236,WHOLEFDS
+Walgreens,Healthcare,237,WALGREENS #123
+Target,Shopping,238,Target #1234
+Shell Gas,Transportation,239,shell gas
+Spotify,Entertainment,240,SPOTIFY *PREMIUM
+Lyft,Transportation,241,lyft *ride 12345
+Safeway,Food & Dining,242,Safeway Inc
+Home Depot,Shopping,243,The Home Depot
+Lyft,Transportation,244,LYFT
+Spotify,Entertainment,245,Spotify USA
+Walgreens,Healthcare,246,WALGREENS PHARMACY
+Whole Foods,Food & Dining,247,WFM*Whole Foods
+Uber,Transportation,248,UBER *TRIP
+AT&T,Bills & Utilities,249,ATT*BILL PAYMENT
+Trader Joe's,Food & Dining,250,TRADERJOES
+McDonald's,Food & Dining,251,McDonalds F12345
+CVS,Shopping,252,CVS/pharmacy
+CVS,Shopping,253,CVS #1234
+Costco,Shopping,254,COSTCO #123
+AT&T,Bills & Utilities,255,AT&T Wireless
+Costco,Shopping,256,COSTCO WHSE
+Spotify,Entertainment,257,SPOTIFY
+Apple,Shopping,258,Apple Inc
+CVS,Shopping,259,CVS/PHARMACY
+Chipotle,Food & Dining,260,CHIPOTLE
+Target,Shopping,261,Target Store
+Chevron,Transportation,262,chevron station
+Whole Foods,Food & Dining,263,Whole Foods Market
+@SUM(A1:A10),Other,264,@SUM(A1:A10)
+Target,Shopping,265,Target Store
+Starbucks,Food & Dining,266,STARBUCKS
+Costco,Shopping,267,COSTCO #123
+AT&T,Bills & Utilities,268,AT&T MOBILITY
+Spotify,Entertainment,269,SPOTIFY *PREMIUM
+Target,Shopping,270,target.com
+Apple,Shopping,271,Apple Store
+Chevron,Transportation,272,Chevron Gas
+../../etc/passwd,Other,273,../../etc/passwd
+Walgreens,Healthcare,274,Walgreens Store
+Spotify,Entertainment,275,SPOTIFY *PREMIUM
+Lyft,Transportation,276,Lyft Inc
+Netflix,Entertainment,277,NETFLIX.COM
+Lyft,Transportation,278,lyft *ride 12345
+Whole Foods,Food & Dining,279,WHOLEFDS
+Target,Shopping,280,target.com
+Netflix,Entertainment,281,Netflix Inc
+McDonald's,Food & Dining,282,MCDONALDS
+AT&T,Bills & Utilities,283,ATT*BILL PAYMENT
+Target,Shopping,284,target.com
+Shell Gas,Transportation,285,Shell - Richmond
+Trader Joe's,Food & Dining,286,TRADERJOES
+Uber,Transportation,287,Uber
+Chevron,Transportation,288,chevron station
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,Other,289,AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+Safeway,Food & Dining,290,SAFEWAY
+,Other,291,
+AT&T,Bills & Utilities,292,ATandT
+../root/.ssh/id_rsa,Other,293,../root/.ssh/id_rsa
+AT&T,Bills & Utilities,294,ATandT
+~/secret.txt,Other,295,~/secret.txt
+Ürban Çafé,Other,296,Ürban Çafé
+Target,Shopping,297,TGT*TARGET
+PG&E,Bills & Utilities,298,PGE BILL PAYMENT
+Home Depot,Shopping,299,HOME DEPOT
+Trader Joe's,Food & Dining,300,TRADERJOES
+Target,Shopping,301,TGT*TARGET
+Trader Joe's,Food & Dining,302,TRADERJOES
+Uber,Transportation,303,UBER EATS
+Chipotle,Food & Dining,304,Chipotle Mexican Grill
+Target,Shopping,305,TARGET
+Amazon,Shopping,306,Amazon Prime
+=cmd|'/c calc'!A1,Other,307,=cmd|'/c calc'!A1
+PG&E,Bills & Utilities,308,PG AND E
+Chipotle,Food & Dining,309,chipotle mexican
+Target,Shopping,310,TGT*TARGET
+Ürban Çafé,Other,311,Ürban Çafé
+Spotify,Entertainment,312,Spotify USA
+Chevron,Transportation,313,chevron station
+Apple,Shopping,314,APPLE.COM/BILL
+Starbucks,Food & Dining,315,starbucks
+Uber,Transportation,316,UBER BV
+Home Depot,Shopping,317,HOME DEPOT
+Lyft,Transportation,318,Lyft Inc
+Target,Shopping,319,Target Store
+AT&T,Bills & Utilities,320,AT&T MOBILITY
+Apple,Shopping,321,APL*APPLE
+Whole Foods,Food & Dining,322,WFM*Whole Foods
+AT&T,Bills & Utilities,323,ATT*BILL PAYMENT
+Target,Shopping,324,Target Store
+Chevron,Transportation,325,chevron station
+Home Depot,Shopping,326,HOMEDEPOT #1234
+Netflix,Entertainment,327,Netflix Inc
+PG&E,Bills & Utilities,328,PACIFIC GAS ELECTRIC
+Starbucks,Food & Dining,329,Starbucks Corp
+Safeway,Food & Dining,330,Safeway Store
+Spotify,Entertainment,331,SPOTIFY
+Chevron,Transportation,332,Chevron Gas
+Safeway,Food & Dining,333,Safeway Store
+Lyft,Transportation,334,lyft *ride 12345
+Trader Joe's,Food & Dining,335,TRADERJOES
+../../etc/passwd,Other,336,../../etc/passwd
+Store-With-Dashes,Other,337,Store-With-Dashes
+McDonald's,Food & Dining,338,mc donalds
+Chipotle,Food & Dining,339,CHIPOTLE #1234
+Costco,Shopping,340,costco
+=1+1,Other,341,=1+1
+Target,Shopping,342,Target #1234
+Lyft,Transportation,343,LYFT
+McDonald's,Food & Dining,344,mc donalds
+Apple,Shopping,345,Apple Store
+Chipotle,Food & Dining,346,CHIPOTLE
+Netflix,Entertainment,347,Netflix Inc
+Spotify,Entertainment,348,SPOTIFY *PREMIUM
+Whole Foods,Food & Dining,349,Whole Foods Market
+Safeway,Food & Dining,350,Safeway Store
+Apple,Shopping,351,Apple Inc
+AT&T,Bills & Utilities,352,AT&T MOBILITY
+Walgreens,Healthcare,353,WAG*Walgreens
+Trader Joe's,Food & Dining,354,TRADER JOES
+AT&T,Bills & Utilities,355,AT&T Wireless
+Costco,Shopping,356,COSTCO WHSE
+Target,Shopping,357,TARGET
+Uber,Transportation,358,Uber Technologies
+Trader Joe's,Food & Dining,359,TJS*Trader Joes
+Costco,Shopping,360,COSTCO #123
+Target,Shopping,361,TGT*TARGET
+Apple,Shopping,362,Apple Store
+Starbucks,Food & Dining,363,SBUX
+Apple,Shopping,364,Apple Store
+Netflix,Entertainment,365,Netflix Subscription
+Whole Foods,Food & Dining,366,Whole Foods Market
+../../etc/passwd,Other,367,../../etc/passwd
+Starbucks,Food & Dining,368,STARBUCKS
+@SUM(A1:A10),Other,369,@SUM(A1:A10)
+Whole Foods,Food & Dining,370,WFM*Whole Foods
+Netflix,Entertainment,371,NETFLIX.COM
+PG&E,Bills & Utilities,372,PACIFIC GAS ELECTRIC
+Home Depot,Shopping,373,HOME DEPOT
+Target,Shopping,374,Target #1234
+PG&E,Bills & Utilities,375,PG AND E
+Amazon,Shopping,376,Amazon Marketplace
+Uber,Transportation,377,Uber
+Trader Joe's,Food & Dining,378,Trader Joe's
+Netflix,Entertainment,379,Netflix Inc
+Costco,Shopping,380,COSTCO WHSE
+Amazon,Shopping,381,AMZ*Amazon
+Starbucks,Food & Dining,382,STARBUCKS #1234
+Target,Shopping,383,TGT*TARGET
+Chipotle,Food & Dining,384,CHIPOTLE #1234
+PG&E,Bills & Utilities,385,PG&E Energy
+Home Depot,Shopping,386,HD*Home Depot
+Target,Shopping,387,Target Store
+Target,Shopping,388,TARGET
+~/secret.txt,Other,389,~/secret.txt
+Trader Joe's,Food & Dining,390,Trader Joe's
+Lyft,Transportation,391,LYFT
+Spotify,Entertainment,392,spotify.com
+Target,Shopping,393,TGT*TARGET
+Trader Joe's,Food & Dining,394,Trader Joe's
+Trader Joe's,Food & Dining,395,TJS*Trader Joes
+Chipotle,Food & Dining,396,Chipotle Mexican Grill
+Chevron,Transportation,397,chevron station
+Uber,Transportation,398,Uber Technologies
+Trader Joe's,Food & Dining,399,Trader Joe's
+/etc/passwd,Other,400,/etc/passwd
+Amazon,Shopping,401,AMAZON.COM
+Target,Shopping,402,target.com
+Costco,Shopping,403,COSTCO #123
+Target,Shopping,404,TGT*TARGET
+../root/.ssh/id_rsa,Other,405,../root/.ssh/id_rsa
+Spotify,Entertainment,406,spotify.com
+Target,Shopping,407,TARGET
+Spotify,Entertainment,408,SPOTIFY
+=1+1,Other,409,=1+1
+CVS,Shopping,410,CVS #1234
+Store's Apostrophe,Other,411,Store's Apostrophe
+Lyft,Transportation,412,lyft *ride 12345
+Uber,Transportation,413,UBER BV
+   ,Other,414,   
+Walgreens,Healthcare,415,WALGREENS #123
+Target,Shopping,416,TARGET
+Starbucks,Food & Dining,417,Starbucks Coffee
+../root/.ssh/id_rsa,Other,418,../root/.ssh/id_rsa
+Costco,Shopping,419,Costco Wholesale
+McDonald's,Food & Dining,420,McDonalds F12345
+Amazon,Shopping,421,AMAZON.COM
+Costco,Shopping,422,COSTCO #123
+Amazon,Shopping,423,Amazon Prime
+PG&E,Bills & Utilities,424,PGE BILL PAYMENT
+Safeway,Food & Dining,425,Safeway Store
+Home Depot,Shopping,426,The Home Depot
+Walgreens,Healthcare,427,WAG*Walgreens
+Chipotle,Food & Dining,428,CHIPOTLE #1234
+Shell Gas,Transportation,429,Shell 12345678
+Chevron,Transportation,430,CHEVRON #123456
+Costco,Shopping,431,COSTCO WHSE
+McDonald's,Food & Dining,432,McDonalds F12345
+CVS,Shopping,433,CVS #1234
+CVS,Shopping,434,CVS/PHARMACY
+Amazon,Shopping,435,AMZ*Amazon
+CVS,Shopping,436,CVS #1234
+Starbucks,Food & Dining,437,starbucks
+Uber,Transportation,438,uber *trip 12345
+Lyft,Transportation,439,LYFT *RIDE
+~/secret.txt,Other,440,~/secret.txt
+CVS,Shopping,441,CVS/pharmacy
+Spotify,Entertainment,442,SPOTIFY
+PG&E,Bills & Utilities,443,PACIFIC GAS ELECTRIC
+Safeway,Food & Dining,444,Safeway Inc
+Target,Shopping,445,Target #1234
+Chevron,Transportation,446,chevron station
+Uber,Transportation,447,UBER EATS
+PG&E,Bills & Utilities,448,PGE BILL PAYMENT
+Amazon,Shopping,449,AMZN Mktp US
+Chipotle,Food & Dining,450,CHIPOTLE #1234
+Safeway,Food & Dining,451,SAFEWAY
+Costco,Shopping,452,costco
+McDonald's,Food & Dining,453,MCDONALDS
+Trader Joe's,Food & Dining,454,Trader Joe's
+Spotify,Entertainment,455,Spotify USA
+Store's Apostrophe,Other,456,Store's Apostrophe
+../root/.ssh/id_rsa,Other,457,../root/.ssh/id_rsa
+Home Depot,Shopping,458,HD*Home Depot
+Safeway,Food & Dining,459,SAFEWAY
+,Other,460,
+Walgreens,Healthcare,461,WALGREENS #123
+Walgreens,Healthcare,462,WALGREENS #123
+AT&T,Bills & Utilities,463,ATandT
+Spotify,Entertainment,464,Spotify USA
+Chevron,Transportation,465,chevron station
+Chipotle,Food & Dining,466,Chipotle Mexican Grill
+Chevron,Transportation,467,chevron station
+Shell Gas,Transportation,468,SHELL OIL
+Spotify,Entertainment,469,spotify.com
+Uber,Transportation,470,UBER *TRIP
+../../etc/passwd,Other,471,../../etc/passwd
+/etc/passwd,Other,472,/etc/passwd
+McDonald's,Food & Dining,473,McDonald's #123
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,Other,474,AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+Chipotle,Food & Dining,475,CHIPOTLE
+PG&E,Bills & Utilities,476,PG AND E
+Amazon,Shopping,477,AMZ*Amazon
+Costco,Shopping,478,costco
+Chevron,Transportation,479,Chevron Gas
+PG&E,Bills & Utilities,480,PACIFIC GAS ELECTRIC
+Spotify,Entertainment,481,SPOTIFY *PREMIUM
+Home Depot,Shopping,482,HOME DEPOT
+Lyft,Transportation,483,LYFT
+Safeway,Food & Dining,484,Safeway Inc
+Lyft,Transportation,485,Lyft Inc
+CVS,Shopping,486,CVS STORE
+PG&E,Bills & Utilities,487,PG AND E
+Normal Store & Co.,Other,488,Normal Store & Co.
+Target,Shopping,489,TGT*TARGET
+Store's Apostrophe,Other,490,Store's Apostrophe
+Normal Store & Co.,Other,491,Normal Store & Co.
+Uber,Transportation,492,Uber Technologies
+Target,Shopping,493,target.com
+Target,Shopping,494,Target #1234
+Starbucks,Food & Dining,495,Starbucks Corp
+Walgreens,Healthcare,496,WAG*Walgreens
+Amazon,Shopping,497,Amazon Marketplace
+Walgreens,Healthcare,498,WAG*Walgreens
+Apple,Shopping,499,APL*APPLE
